@@ -164,8 +164,10 @@ EOF
     @executable_path/../Frameworks/libvosk.dylib \
     ${APPDIR}/MacOS/WirePod
 
-    # Bind Info.plist (NSLocalNetworkUsageDescription etc.) to the app's code identity
-    codesign --force --deep --sign - target/WirePod.app
+    # Bind Info.plist (NSLocalNetworkUsageDescription etc.) to the app's code identity.
+    # Set SIGN_IDENTITY to a stable certificate (e.g. "Apple Development: ...") so macOS keeps
+    # the Local Network grant across builds; ad-hoc ("-") changes identity every build.
+    codesign --force --deep --sign "${SIGN_IDENTITY:--}" target/WirePod.app
 }
 
 function buildDmg() {
